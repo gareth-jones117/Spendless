@@ -5,13 +5,13 @@ export interface BudgetData {
   user_id: number
   name: string
   total_amount: number
-  created_at: string
-  updated_at: string
+  created_at: Date
+  updated_at: Date
 }
 
 // get all budget data
 export async function getAllBudgetData(): Promise<BudgetData[]> {
-  return db<BudgetData>('budget').select(
+  return db<BudgetData>('budgets').select(
     'id',
     'user_id',
     'name',
@@ -25,27 +25,19 @@ export async function getAllBudgetData(): Promise<BudgetData[]> {
 export async function getBudgetById(
   id: number
 ): Promise<BudgetData | undefined> {
-  return db('budget')
+  return db('budgets')
     .where('id', id)
     .select('id', 'user_id', 'name', 'total_amount', 'created_at', 'updated_at')
     .first()
 }
 
 // add budget
-export async function addbudget(
+export async function addBudget(
   budget: Omit<BudgetData, 'id' | 'created_at' | 'updated_at'>
 ): Promise<BudgetData> {
-  const [newBudget] = await db('budget')
+  const [newBudget] = await db('budgets')
     .insert(budget)
-    .returning([
-      'id',
-      'user_id',
-      'gross_income',
-      'tax_rate',
-      'net_income',
-      'created_at',
-      'updated_at',
-    ])
+    .returning(['user_id', 'name', 'total_amount'])
 
   return newBudget
 }
@@ -55,7 +47,9 @@ export async function updateBudget(
   id: number,
   updatedBudget: Partial<Omit<BudgetData, 'id'>>
 ): Promise<BudgetData | undefined> {
-  const updatedCount = await db('budget').where({ id }).update(updatedBudget)
+  const updatedCount = await db('budgets')
+    .where({ id })
+    .update({ ...updatedBudget, updated_at: db.fn.now() })
 
   if (updatedCount > 0) {
     return getBudgetById(id)
@@ -67,11 +61,11 @@ export async function updateBudget(
 // delete income
 
 export async function deleteBudget(id: number): Promise<void> {
-  const budgetExists = await db('budget').where('id', id).first()
+  const budgetExists = await db('budgets').where('id', id).first()
 
   if (!budgetExists) {
-    throw new Error('income not found')
+    throw new Error('budget not found')
   }
 
-  await db('budget').where('id', id).delete()
+  await db('budgets').where('id', id).delete()
 }
