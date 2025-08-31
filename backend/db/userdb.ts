@@ -2,21 +2,21 @@ import db from './connection'
 
 export interface UserData {
   id: number
-  auth0_id: string
+  auth0_sub: string
   email: string
   name: string
 }
 
 // get all users
 export async function getAllUserData(): Promise<UserData[]> {
-  return db<UserData>('users').select('id', 'auth0_id', 'email', 'name')
+  return db<UserData>('users').select('id', 'auth0_sub', 'email', 'name')
 }
 
 // get user by id
 export async function getUserById(id: number): Promise<UserData | undefined> {
   return db('users')
     .where('id', id)
-    .select('id', 'auth0_id', 'email', 'name')
+    .select('id', 'auth0_sub', 'email', 'name')
     .first()
 }
 
@@ -25,7 +25,7 @@ export async function getUserById(id: number): Promise<UserData | undefined> {
 export async function addUser(user: Omit<UserData, 'id'>): Promise<UserData> {
   const [newUser] = await db('users')
     .insert(user)
-    .returning(['id', 'auth0_id', 'email', 'name'])
+    .returning(['id', 'auth0_sub', 'email', 'name'])
 
   return newUser
 }
