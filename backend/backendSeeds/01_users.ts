@@ -3,11 +3,13 @@
  * @returns { Promise<void> }
  */
 
-export async function seed(knex) {
-  // clear user
+import type { Knex } from 'knex'
+
+export async function seed(knex: Knex): Promise<void> {
+  // clear users
   await knex('users').del()
 
-  // insert User
+  // insert users
   await knex('users').insert([
     {
       id: 1,
