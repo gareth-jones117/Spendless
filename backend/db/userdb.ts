@@ -32,17 +32,13 @@ export async function addUser(user: Omit<UserData, 'id'>): Promise<UserData> {
 
 // update user
 
-export async function updateUser(
-  id: number,
-  updatedUser: Partial<UserData>
-): Promise<UserData | undefined> {
-  const updatedCount = await db('users').where({ id }).update(updatedUser)
+export async function updateUser(id: number, updates: Partial<UserData>) {
+  const [updated] = await db('users')
+    .where({ id })
+    .update(updates)
+    .returning('*')
 
-  if (updatedCount > 0) {
-    return getUserById(id)
-  }
-
-  return undefined
+  return updated
 }
 
 // delete user by id
