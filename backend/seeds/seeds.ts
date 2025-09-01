@@ -1,17 +1,25 @@
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
-export async function seed(knex) {
+import type { Knex } from 'knex'
+
+export async function seed(knex: Knex): Promise<void> {
   await knex('expenses').del()
   await knex('budgets').del()
   await knex('income').del()
   await knex('users').del()
 
   await knex('users').insert([
-    { id: 1, auth0_id: 'auth0|alice123', email: 'alice@example.com' },
-    { id: 2, auth0_id: 'auth0|bob456', email: 'bob@example.com' },
-    { id: 3, auth0_id: 'auth0|carol789', email: 'carol@example.com' },
+    {
+      id: 1,
+      auth0_sub: 'auth0|alice123',
+      email: 'alice@example.com',
+      name: 'Alice',
+    },
+    { id: 2, auth0_sub: 'auth0|bob456', email: 'bob@example.com', name: 'Bob' },
+    {
+      id: 3,
+      auth0_sub: 'auth0|carol789',
+      email: 'carol@example.com',
+      name: 'Carol',
+    },
   ])
 
   await knex('income').insert([

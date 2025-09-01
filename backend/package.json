@@ -5,9 +5,9 @@
   "scripts": {
   "start": "node dist/server.js", 
   "dev": "ts-node-dev --respawn server.ts",
-  "migrate": "knex migrate:latest",
-  "rollback": "knex migrate:rollback",
-  "seed": "knex seed:run"
+  "migrate": "ts-node ./node_modules/knex/bin/cli.js migrate:latest",
+  "rollback": "ts-node ./node_modules/knex/bin/cli.js migrate:rollback",
+  "seed": "ts-node ./node_modules/knex/bin/cli.js seed:run"
   },
   "keywords": [],
   "author": "",
