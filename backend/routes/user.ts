@@ -32,6 +32,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+// add user
 router.post('/', async (req, res) => {
   try {
     const { auth0_sub, email, name } = req.body
@@ -70,6 +71,7 @@ router.patch('/:id', async (req, res) => {
   }
 })
 
+// delete user
 router.delete('/:id', async (req, res) => {
   try {
     const userId = Number(req.params.id)

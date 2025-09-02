@@ -1,6 +1,6 @@
 import db from './connection'
 
-export interface expensesData {
+export interface ExpensesData {
   id: number
   budget_id: number
   name: string
@@ -13,8 +13,8 @@ export interface expensesData {
 
 // get all expense data
 
-export async function getAllExpenses(): Promise<expensesData[]> {
-  return db<expensesData>('expenses').select(
+export async function getAllExpenses(): Promise<ExpensesData[]> {
+  return db<ExpensesData>('expenses').select(
     'id',
     'budget_id',
     'name',
@@ -28,7 +28,7 @@ export async function getAllExpenses(): Promise<expensesData[]> {
 // get expense by id
 export async function getExpenseById(
   id: number
-): Promise<expensesData | undefined> {
+): Promise<ExpensesData | undefined> {
   return db('expenses')
     .where('id', id)
     .select(
@@ -46,8 +46,8 @@ export async function getExpenseById(
 // add an Expense
 
 export async function addExpense(
-  expense: Omit<expensesData, 'id' | 'created_at' | 'updated_at'>
-): Promise<expensesData> {
+  expense: Omit<ExpensesData, 'id' | 'created_at' | 'updated_at'>
+): Promise<ExpensesData> {
   const [newExpense] = await db('expenses')
     .insert(expense)
     .returning([
@@ -68,8 +68,8 @@ export async function addExpense(
 
 export async function updateExpense(
   id: number,
-  updatedExpense: Partial<Omit<expensesData, 'id'>>
-): Promise<expensesData | undefined> {
+  updatedExpense: Partial<Omit<ExpensesData, 'id'>>
+): Promise<ExpensesData | undefined> {
   const updatedCount = await db('expenses')
     .where({ id })
     .update({ ...updatedExpense, updated_at: db.fn.now() })
