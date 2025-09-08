@@ -43,12 +43,6 @@ export async function updateUser(id: number, updates: Partial<UserData>) {
 
 // delete user by id
 
-export async function deleteUser(id: number): Promise<void> {
-  const userExists = await db('users').where('id', id).first()
-
-  if (!userExists) {
-    throw new Error('User not found')
-  }
-
-  await db('users').where('id', id).delete()
+export async function deleteUser(id: number): Promise<number> {
+  return await db('users').where({ id }).del()
 }

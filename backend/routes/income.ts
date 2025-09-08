@@ -79,17 +79,18 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const incomeId = Number(req.params.id)
-    await IncomeDb.deleteIncome(incomeId)
-    res.status(200).json({ message: `Income deleted: ${incomeId}` })
-  } catch (err) {
-    if (err instanceof Error) {
-      if (err.message === 'Income not found') return res.sendStatus(404)
-      console.error('Error deleting income:', err)
-      return res.sendStatus(500)
+    const deletedCount = await IncomeDb.deleteIncome(incomeId)
+
+    if (deletedCount === 0) {
+      return res.status(404).json({ message: 'Income not found' })
     }
-    console.error('Unexpected error deleting income:', err)
+
+    res.status(200).json({ message: `Income ${incomeId} deleted` })
+  } catch (error) {
+    console.error('Could not delete income:', error)
     res.sendStatus(500)
   }
 })
+
 
 export default router

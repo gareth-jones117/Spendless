@@ -82,13 +82,6 @@ export async function updateExpense(
 }
 
 // delete expense
-
-export async function deleteExpense(id: number): Promise<void> {
-  const expenseExists = await db('expenses').where('id', id).first()
-
-  if (!expenseExists) {
-    throw new Error('expense not found')
-  }
-
-  await db('expenses').where('id', id).delete()
+export async function deleteExpense(id: number): Promise<number> {
+  return await db('expenses').where({ id }).del()
 }

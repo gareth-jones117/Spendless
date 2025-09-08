@@ -71,25 +71,27 @@ router.patch('/:id', async (req, res) => {
   }
 })
 
-// delete user
+
+// DELETE /api/v1/users/:id
 router.delete('/:id', async (req, res) => {
   try {
-    const userId = Number(req.params.id)
-    await UserDb.deleteUser(userId)
-    res.status(200).json({ message: `User deleted ${userId}` })
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === 'User not found') {
-        res.sendStatus(404)
-      } else {
-        console.error('Could not delete user.', error)
-        res.sendStatus(500)
-      }
-    } else {
-      console.error('Unexpected error, could not delete user', error)
-      res.sendStatus(500)
+    const id = Number(req.params.id)
+    if (isNaN(id)) {
+      return res.status(400).json({ success: false, message: 'Invalid ID' })
     }
+
+    const deletedCount = await UserDb.deleteUser(id) // replace with actual DB call
+
+    if (deletedCount === 0) {
+      return res.status(404).json({ success: false, message: 'Resource not found' })
+    }
+
+    res.status(200).json({ success: true, message: `User ${id} deleted` })
+  } catch (error) {
+    console.error('Could not delete user:', error)
+    res.status(500).json({ success: false, message: 'Server error, could not delete user' })
   }
 })
+
 
 export default router

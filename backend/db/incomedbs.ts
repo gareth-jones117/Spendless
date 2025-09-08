@@ -77,12 +77,6 @@ export async function updateIncome(
 
 // delete income
 
-export async function deleteIncome(id: number): Promise<void> {
-  const incomeExists = await db('income').where('id', id).first()
-
-  if (!incomeExists) {
-    throw new Error('income not found')
-  }
-
-  await db('income').where('id', id).delete()
+export async function deleteIncome(id: number): Promise<number> {
+  return await db('income').where({ id }).del()
 }

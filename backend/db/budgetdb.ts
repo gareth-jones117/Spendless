@@ -60,12 +60,7 @@ export async function updateBudget(
 
 // delete income
 
-export async function deleteBudget(id: number): Promise<void> {
-  const budgetExists = await db('budgets').where('id', id).first()
-
-  if (!budgetExists) {
-    throw new Error('budget not found')
-  }
-
-  await db('budgets').where('id', id).delete()
+export async function deleteBudget(id: number): Promise<number> {
+  return await db('budgets').where({ id }).del()
 }
+

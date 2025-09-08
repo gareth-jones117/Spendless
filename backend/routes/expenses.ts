@@ -79,24 +79,22 @@ router.patch('/:id', async (req, res) => {
 })
 
 // DELETE /api/v1/expenses/:id -- delete expense
+
 router.delete('/:id', async (req, res) => {
   try {
     const expenseId = Number(req.params.id)
-    await ExpensesDb.deleteExpense(expenseId)
-    res.status(200).json({ message: `Expense deleted ${expenseId}` })
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === 'Expense not found') {
-        res.sendStatus(404)
-      } else {
-        console.error('Could not delete expense:', error)
-        res.sendStatus(500)
-      }
-    } else {
-      console.error('Unexpected error, could not delete expense:', error)
-      res.sendStatus(500)
+    const deletedCount = await ExpensesDb.deleteExpense(expenseId)
+
+    if (deletedCount === 0) {
+      return res.status(404).json({ message: 'Expense not found' })
     }
+
+    res.status(200).json({ message: `Expense ${expenseId} deleted` })
+  } catch (error) {
+    console.error('Could not delete budget:', error)
+    res.sendStatus(500)
   }
 })
+
 
 export default router
